@@ -83,12 +83,9 @@ exports.verifyOtp = async (req, res) => {
       return res.status(400).json({ success: false, message: "Mobile and OTP are required", });
     }
 
-    const storedOtp = await redis.get(  //getting otp from redis
-      `otp:${normalizedMobile}`
-    );
-
+    const storedOtp = await redis.get(  `otp:${normalizedMobile}`  );  //getting otp from redis
+      
     if (!storedOtp) return res.status(400).json({ success: false, message: "OTP expired" });
-
 
     if (String(storedOtp).trim() !== normalizedOtp) {
 
