@@ -42,11 +42,11 @@ exports.sendOtp = async (req, res) => {
       { ex: 60 }
     );
 
-    await client.messages.create({
-      body: `Your Horoo OTP is ${otp}. Valid for 5 minutes.`,
-      from: process.env.TWILIO_WHATSAPP_NUMBER,
-      to: `whatsapp:+91${mobile}`,
-    });
+    // await client.messages.create({
+    //   body: `Your Horoo OTP is ${otp}. Valid for 5 minutes.`,
+    //   from: process.env.TWILIO_WHATSAPP_NUMBER,
+    //   to: `whatsapp:+91${mobile}`,
+    // });
 
     return res.status(200).json({
       success: true,

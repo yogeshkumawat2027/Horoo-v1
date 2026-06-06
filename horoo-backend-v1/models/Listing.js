@@ -15,7 +15,7 @@ const listingSchema = new mongoose.Schema(
 
     flatType: {
       type: String,
-      enum: ["1 BHK", "2 BHK", "3 BHK", "4 BHK", "5+ BHK"],
+      enum: ["1BHK", "2BHK", "3BHK", "4BHK"],
       default: null,
     },
 
@@ -55,8 +55,7 @@ const listingSchema = new mongoose.Schema(
       },
 
     area: { 
-      type: String, 
-      required: true,  
+      type: String,  
       index: true 
     },
 
@@ -72,7 +71,7 @@ const listingSchema = new mongoose.Schema(
       },
     },
 
-    image: { type: String, default: null },
+    images: { type: [String], default: [] },
 
     facilities: [String],
 

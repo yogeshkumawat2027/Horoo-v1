@@ -8,7 +8,8 @@ const User = require("./models/User.js");
 const connectDB = require("./config/db.js");
 
 const authRoutes = require("./routes/authRoutes");
-const listingRoutes = require("./routes/listingRoutes")
+const listingRoutes = require("./routes/listingRoutes");
+const uploadRoutes = require("./routes/uploadRoutes");
 
 const PORT = process.env.PORT || 5000 ;
 
@@ -22,12 +23,12 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.use("/api/auth" , authRoutes);
-
 app.use("/api/listing" , listingRoutes);
+app.use("/api/upload", uploadRoutes);
 
 
 app.get("/", (req, res) => {
-  res.send("Horoo API Running...");
+  res.send("API is Running...");
 });
 
 app.post("/register",async(req,res)=>{
