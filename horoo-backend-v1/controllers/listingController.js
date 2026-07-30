@@ -73,3 +73,34 @@ exports.deleteListing = async (req, res) => {
     return res.status(500).json({ success: false, message: "server error" });
   }
 }
+
+exports.updateAvailability = async (req, res) => {
+  try {
+
+    const id = req.params.id;
+    const availibility = req.body.isAvailable;
+    const listing = await Listing.findOneAndUpdate(
+      { _id: id , owner: req.user.id},
+      { isAvailable: availibility },
+      {new: true, } // returns updated new document
+    );
+
+    if (!listing) {
+      return res.status(404).json({
+        success: false,
+        message: "Listing not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Availability updated",
+      listing,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
