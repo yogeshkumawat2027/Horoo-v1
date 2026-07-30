@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const client = require("../config/twilio");
-const redis = require("../config/redis");
+const { redis } = require("../config/redis");
 
 exports.sendOtp = async (req, res) => {
   try {
@@ -24,24 +24,12 @@ exports.sendOtp = async (req, res) => {
       });
     }
 
-    const otp = Math.floor(
-      100000 + Math.random() * 900000
-    ).toString();
+     const otp = Math.floor(100000 + Math.random()* 900000).toString();
+      
+    await redis.set(`otp:${mobile}`, otp, {EX: 300});  //valid for 5 minutes
 
-
-    await redis.set(
-      `otp:${mobile}`,
-      otp,
-      { ex: 300 }  // 5 min
-    );
-
-
-    await redis.set(
-      `cooldown:${mobile}`,
-      "1",
-      { ex: 60 }
-    );
-
+    await redis.set(`cooldown:${mobile}`, "1", {EX: 60, });// OTP again after 60 seconds
+   
     // await client.messages.create({
     //   body: `Your Horoo OTP is ${otp}. Valid for 5 minutes.`,
     //   from: process.env.TWILIO_WHATSAPP_NUMBER,
@@ -51,7 +39,7 @@ exports.sendOtp = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "OTP sent successfully",
-      otp, // remove in production
+      otp, //we remove otp in production
     });
 
   } catch (error) {

@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const { connectRedis } = require("./config/redis");
 
 const User = require("./models/User.js");
 
@@ -37,7 +38,17 @@ app.post("/register",async(req,res)=>{
   
 })
 
-app.listen(PORT , ()=>{
-    console.log(`server is running on port ${PORT}`);
+const startServer = async () => {
+  try {
     connectDB();
-})
+    await connectRedis();
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Server startup failed:", error);
+    process.exit(1);
+  }
+};
+
+startServer();
