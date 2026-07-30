@@ -104,3 +104,22 @@ exports.updateAvailability = async (req, res) => {
     });
   }
 };
+
+exports.getMyListings = async (req, res) => {
+  try {
+
+    console.log(req.user.id);
+    const listings = await Listing.find({owner: req.user.id}).sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: listings.length,
+      listings,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
