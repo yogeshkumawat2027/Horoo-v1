@@ -10,7 +10,8 @@ const User = require("./models/User.js");
 const connectDB = require("./config/db.js");
 
 const authRoutes = require("./routes/authRoutes");
-const listingRoutes = require("./routes/listingRoutes");
+const ownerListingRoutes = require("./routes/owner.listingRoutes.js");
+const userListingRoutes = require("./routes/user.listingRoutes.js");
 const uploadRoutes = require("./routes/uploadRoutes");
 
 const PORT = process.env.PORT || 5000 ;
@@ -26,7 +27,8 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.use("/api/auth" , authRoutes);
-app.use("/api/listing" , listingRoutes);
+app.use("/api/listing/owner" , ownerListingRoutes);
+app.use("/api/listing/user" , userListingRoutes);
 app.use("/api/upload", uploadRoutes);
 
 
@@ -34,9 +36,7 @@ app.get("/", (req, res) => {
   res.send("API is Running...");
 });
 
-app.post("/register",async(req,res)=>{
-  
-})
+
 
 const startServer = async () => {
   try {
