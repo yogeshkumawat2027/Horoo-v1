@@ -6,18 +6,14 @@ exports.createListing = async (req, res) => {
 
   try {
     const { name, type, price, address, state, city } = req.body;
-
     if (!name || !price || !type || !address || !state || !city) {
       return res.status(400).json({ success: false, message: " required fileds are missing" });
     }
-
     const listing = await Listing.create({
       ...req.body,
       owner: req.user.id,
     });
-
     return res.json(201).json({ success: true, message: "listing created", listing })
-
   } catch (err) {
     console.log(err);
     return res.status(500).json({ success: false, message: "server error" });
@@ -80,6 +76,7 @@ exports.updateAvailability = async (req, res) => {
 
     const id = req.params.id;
     const availibility = req.body.isAvailable;
+    
     const listing = await Listing.findOneAndUpdate(
       { _id: id , owner: req.user.id},
       { isAvailable: availibility },
