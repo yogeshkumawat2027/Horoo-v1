@@ -11,6 +11,6 @@ router.put("/edit/:id" , auth , isOwner , editListing);
 router.delete("/delete/:id" , auth , isOwner , deleteListing);
 router.patch("/:id/availability",auth,isOwner,updateAvailability);
 router.get("/my-listings", auth, isOwner, getListings);
-router.get("/my-listings/:id", auth, isOwner, getListings);
+router.get("/my-listings/:id", auth, isOwner, getListing);
   
 module.exports = router;
