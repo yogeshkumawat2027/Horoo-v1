@@ -41,7 +41,7 @@ app.get("/", (req, res) => {
 const startServer = async () => {
   try {
     connectDB();
-    await connectRedis();
+    // await connectRedis();
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });

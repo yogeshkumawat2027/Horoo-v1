@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-exports.auth = async (req,res,next)=>{
+exports.auth = async(req,res,next)=>{
     try{
         let token; 
 
@@ -12,16 +12,11 @@ exports.auth = async (req,res,next)=>{
             token = req.cookies.token;
         }
 
-        if(!token){
-            return res.status(401).json({
-                success : "false",
-                message : " Login reqiured"
-            });
-        }
-
+        if(!token) return res.status(401).json({ success : false, message : " Login reqiured"  });
+            
         const decoded = jwt.verify(token , process.env.JWT_SECRET);
 
-        console.log(decoded);
+        // console.log(decoded);
 
         req.user = decoded;
 
