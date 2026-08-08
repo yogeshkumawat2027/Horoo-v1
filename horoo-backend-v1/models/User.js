@@ -4,20 +4,38 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      // required: true,
       trim: true,
     },
 
-    mobile: {
+    email: {
       type: String,
       required: true,
       unique: true,
       trim: true,
+      lowercase: true,
       index: true,
+    },
+
+    mobile: {
+      type: String,
+      trim: true,
+      default: null,
     },
 
     password: {
       type: String,
+      default: null,
+    },
+
+    authProvider: {
+      type: String,
+      enum: ["local", "google"],
+      default: "local",
+    },
+
+    googleId: {
+      type: String,
+      default: null,
     },
 
     role: {
@@ -25,7 +43,6 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "owner"],
       default: "user",
     },
-
 
     lastLogin: {
       type: Date,

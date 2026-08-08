@@ -1,165 +1,62 @@
 const User = require("../models/User");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const client = require("../config/twilio");
-const { redis } = require("../config/redis");
 
-exports.sendOtp = async (req, res) => {
+exports.register = async (req, res) => {
   try {
-    const mobile = String(req.body.mobile || "").trim();
+    const { name, email, password } = req.body;
 
-    if (!mobile) {
+    if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Mobile number is required",
+        message: "Email and password are required",
       });
     }
 
-    // Cooldown check (60 sec)
-    const cooldown = await redis.get(`cooldown:${mobile}`);
+    const existingUser = await User.findOne({ email });
 
-    if (cooldown) {
-      return res.status(429).json({
+    if (existingUser) {
+      return res.status(400).json({
         success: false,
-        message: "Please wait before requesting another OTP",
+        message: "Email already registered",
       });
     }
 
-     const otp = Math.floor(100000 + Math.random()* 900000).toString();
-      
-    await redis.set(`otp:${mobile}`, otp, {EX: 300});  //valid for 5 minutes
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    await redis.set(`cooldown:${mobile}`, "1", {EX: 60, });// OTP again after 60 seconds
-   
-    // await client.messages.create({
-    //   body: `Your Horoo OTP is ${otp}. Valid for 5 minutes.`,
-    //   from: process.env.TWILIO_WHATSAPP_NUMBER,
-    //   to: `whatsapp:+91${mobile}`,
-    // });
-
-    return res.status(200).json({
-      success: true,
-      message: "OTP sent successfully",
-      otp, //we remove otp in production
-    });
-
-  } catch (error) {
-    console.log(error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Server Error",
-    });
-  }
-};
-
-//verify otp and register
-
-exports.verifyOtp = async (req, res) => {
-  try {
-
-    const {
-      mobile,
-      otp,
+    const user = await User.create({
       name,
-      role
-    } = req.body;
-
-    const normalizedMobile = String(mobile || "").trim();
-    const normalizedOtp = String(otp || "").trim();
-
-    if (!normalizedMobile || !normalizedOtp) {
-      return res.status(400).json({ success: false, message: "Mobile and OTP are required", });
-    }
-
-    const storedOtp = await redis.get(  `otp:${normalizedMobile}`  );  //getting otp from redis
-      
-    if (!storedOtp) return res.status(400).json({ success: false, message: "OTP expired" });
-
-    if (String(storedOtp).trim() !== normalizedOtp) {
-
-      return res.status(400).json({ success: false, message: "Invalid OTP" });
-
-    }
-
-    await redis.del(`otp:${normalizedMobile}`);
-
-
-    let user = await User.findOne({ mobile: normalizedMobile });
-
-    if (user) {
-      user.lastLogin = new Date();
-
-      if(!user.role){
-        user.role = role;
-      }
-      await user.save();
-    } else {
-      // New User ---> Register
-
-      if (!name) {
-        return res.status(400).json({
-          success: false,
-          message: "Name is required for new users",
-        });
-      }
-
-      user = await User.create({
-        name,
-        mobile: normalizedMobile,
-        role: role || "user",
-        lastLogin: new Date(),
-      });
-    }
+      email,
+      password: hashedPassword,
+      authProvider: "local",
+    });
 
     const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
       {
-        id: user._id,
-        role: user.role,
-      }, process.env.JWT_SECRET, { expiresIn: "30d" });
+        expiresIn: "30d",
+      }
+    );
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge:
-        30 * 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === "production",
+      sameSite:
+        process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
-    return res.status(200).json({
+    return res.status(201).json({
       success: true,
-      message: "Login / Signup successful",
-      token,
+      message: "Account created successfully",
       user: {
         id: user._id,
         name: user.name,
-        mobile: user.mobile,
+        email: user.email,
         role: user.role,
       },
     });
-
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({success: false,message: "Server Error"}); 
-  }
-};
-
-exports.getMe = async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id).select("-password");
-
-    if (!user){
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    // console.log("Cookies:", req.cookies);
-    console.log("Authorization:", req.headers.authorization);
-
-
-    return res.status(200).json({success: true, user});
-      
   } catch (error) {
     return res.status(500).json({
       success: false,
