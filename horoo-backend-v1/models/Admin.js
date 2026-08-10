@@ -8,10 +8,11 @@ const adminSchema = new mongoose.Schema(
       trim: true,
     },
 
-    mobile: {
+    email: {
       type: String,
       required: true,
       unique: true,
+      lowercase: true,
       trim: true,
       index: true,
     },
