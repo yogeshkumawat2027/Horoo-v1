@@ -13,6 +13,7 @@ const authRoutes = require("./routes/authRoutes");
 const ownerListingRoutes = require("./routes/owner.listingRoutes.js");
 const userListingRoutes = require("./routes/user.listingRoutes.js");
 const uploadRoutes = require("./routes/uploadRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const PORT = process.env.PORT || 5000 ;
 
@@ -30,6 +31,7 @@ app.use("/api/auth" , authRoutes);
 app.use("/api/listing/owner" , ownerListingRoutes);
 app.use("/api/listing/user" , userListingRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/admin", adminRoutes);
 
 
 app.get("/", (req, res) => {
