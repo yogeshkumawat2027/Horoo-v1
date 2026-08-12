@@ -4,8 +4,11 @@ const router = express.Router();
 
 
 const { isAdmin } = require("../middlewares/isAdmin");
-const { getAllListings } = require("../controllers/AdminController");
+const { getAllListings, registerAdmin, loginAdmin } = require("../controllers/AdminController");
 
+
+router.post("/register", registerAdmin);
+router.post("/login", loginAdmin);
 
 
 router.get("/listings", isAdmin, getAllListings);

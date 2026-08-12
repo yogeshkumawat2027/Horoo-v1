@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-console.log("EMAIL_USER:", process.env.EMAIL_USER);
-console.log("APP PASSWORD EXISTS:", !!process.env.EMAIL_APP_PASSWORD);
+// console.log("EMAIL_USER:", process.env.EMAIL_USER);
+// console.log("APP PASSWORD EXISTS:", !!process.env.EMAIL_APP_PASSWORD);
 
 module.exports = transporter;
