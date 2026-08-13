@@ -10,8 +10,17 @@ exports.getListings = async (req, res) =>{
       isShow: true,
     };
 
+    console.log(Listing.find({}));
+
+    // const { type } = req.query;
+
+    //  if(type){
+    //   filter.type = type;
+    // }
+
     const [listings, totalListings] = await Promise.all([
       Listing.find(filter)
+        .select( "title rent roomType availableFor images state city area")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)

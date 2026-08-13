@@ -5,7 +5,8 @@ const { getListings, getListingById } = require("../controllers/user.listingCont
 
 const { auth } = require("../middlewares/auth");
 
-router.get("/", getListings);
 router.get("/:id", getListingById); 
+router.get("/", getListings);
+
 
 module.exports = router;
