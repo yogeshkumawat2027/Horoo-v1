@@ -5,22 +5,51 @@ exports.getListings = async (req, res) =>{
     const page = Math.max(Number(req.query.page) || 1, 1);
     const limit = 12;
     const skip = (page - 1) * limit;
+    const {
+      type,
+      state,
+      city,
+      area,
+      availableFor,
+      roomType,
+      flatType,
+      minPrice,
+      maxPrice,
+      q,
+    } = req.query;
 
     const filter = {
       isShow: true,
+      status: "active",
     };
 
-    console.log(Listing.find({}));
+    if (type) filter.type = type;
+    if (state) filter.state = new RegExp(String(state), "i");
+    if (city) filter.city = new RegExp(String(city), "i");
+    if (area) filter.area = new RegExp(String(area), "i");
+    if (availableFor) filter.availableFor = String(availableFor).toLowerCase();
+    if (roomType) filter.roomType = String(roomType);
+    if (flatType) filter.flatType = String(flatType).toUpperCase();
 
-    // const { type } = req.query;
+    if (minPrice || maxPrice) {
+      filter.price = {};
+      if (minPrice) filter.price.$gte = Number(minPrice);
+      if (maxPrice) filter.price.$lte = Number(maxPrice);
+    }
 
-    //  if(type){
-    //   filter.type = type;
-    // }
+    if (q) {
+      const search = new RegExp(String(q), "i");
+      filter.$or = [
+        { name: search },
+        { city: search },
+        { area: search },
+        { address: search },
+      ];
+    }
 
     const [listings, totalListings] = await Promise.all([
       Listing.find(filter)
-        .select( "title rent roomType availableFor images state city area")
+        .select("name type price flatType roomType availableFor images state city area isAvailable isVerified createdAt")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
