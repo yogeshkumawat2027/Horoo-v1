@@ -1,7 +1,6 @@
 
 import Hero from "@/components/layout/Hero";
 import Footer from "@/components/layout/Footer";
-import Image from "next/image";
 import { dummyListings } from "./data/dummyListings";
 import ListingCard from "@/components/ListingCard";
 
