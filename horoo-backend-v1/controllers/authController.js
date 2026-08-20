@@ -6,7 +6,7 @@ const transporter = require("../config/mailer");
 
 exports.register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({
@@ -30,6 +30,7 @@ exports.register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      role: role === "owner" ? "owner" : "user",
       authProvider: "local",
     });
 
