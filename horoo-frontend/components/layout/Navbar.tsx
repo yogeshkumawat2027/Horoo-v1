@@ -3,6 +3,13 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import AuthModal from "@/components/auth/AuthModal";
+import {
+  clearAuthUser,
+  getStoredUser,
+  logoutUser,
+  type AuthUser,
+} from "@/lib/auth";
 
 import {
   FaBars,
@@ -18,12 +25,6 @@ import {
   FaUserFriends,
 } from "react-icons/fa";
 
-interface User {
-  name: string;
-  email: string;
-  profilePicture?: string;
-}
-
 interface PropertyType {
   name: string;
   icon: React.ElementType;
@@ -37,23 +38,29 @@ export default function Navbar() {
   const [isMobilePropertiesOpen, setIsMobilePropertiesOpen] =
     useState<boolean>(false);
 
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [isUserDropdownOpen, setIsUserDropdownOpen] =
     useState<boolean>(false);
+  const [authModal, setAuthModal] = useState<{
+    isOpen: boolean;
+    mode: "login" | "signup";
+  }>({ isOpen: false, mode: "login" });
 
   // Check if user is logged in
   useEffect(() => {
-    const userToken = localStorage.getItem("userToken");
-    const userData = localStorage.getItem("user");
+    queueMicrotask(() => {
+      setUser(getStoredUser());
+    });
 
-    if (userToken && userData) {
-      try {
-        setUser(JSON.parse(userData));
-      } catch (error) {
-        console.error("Invalid user data:", error);
-        localStorage.removeItem("user");
-      }
-    }
+    const handleUserChange = (event: Event) => {
+      setUser((event as CustomEvent<AuthUser | null>).detail);
+    };
+
+    window.addEventListener("auth:user-changed", handleUserChange);
+
+    return () => {
+      window.removeEventListener("auth:user-changed", handleUserChange);
+    };
   }, []);
 
   // Handle body scroll lock when menu is open
@@ -82,31 +89,33 @@ export default function Navbar() {
     setIsMobilePropertiesOpen(!isMobilePropertiesOpen);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("userToken");
-    localStorage.removeItem("user");
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
 
+    clearAuthUser();
     setUser(null);
     setIsUserDropdownOpen(false);
-
-    window.location.reload();
   };
 
   const propertyTypes: PropertyType[] = [
     {
       name: "Rooms",
       icon: FaBed,
-      href: "/rooms",
+      href: "/room",
     },
     {
       name: "Flats",
       icon: FaBuilding,
-      href: "/flats",
+      href: "/flat",
     },
     {
       name: "Hostels",
       icon: FaUserFriends,
-      href: "/hostels",
+      href: "/hostel",
     },
     {
       name: "House",
@@ -116,7 +125,7 @@ export default function Navbar() {
     {
       name: "Commercials",
       icon: FaWarehouse,
-      href: "/commercials",
+      href: "/commercial",
     },
     {
       name: "Hotel Rooms",
@@ -221,10 +230,10 @@ export default function Navbar() {
 
             {/* List Rental */}
             <Link
-              href="/list-rental"
+              href={user?.role === "owner" ? "/owner-dashboard" : "/list-rental"}
               className="text-lg text-gray-600 hover:text-orange-600 font-semibold transition-colors duration-200"
             >
-              List Rental
+              {user?.role === "owner" ? "Owner Dashboard" : "List Rental"}
             </Link>
 
             {/* User Authentication */}
@@ -296,12 +305,18 @@ export default function Navbar() {
               <div className="flex items-center space-x-3">
 
                 <button
+                  onClick={() =>
+                    setAuthModal({ isOpen: true, mode: "login" })
+                  }
                   className="text-orange-600 hover:text-orange-700 font-semibold px-4 py-2 rounded-lg hover:bg-orange-50 transition-all duration-200"
                 >
                   Login
                 </button>
 
                 <button
+                  onClick={() =>
+                    setAuthModal({ isOpen: true, mode: "signup" })
+                  }
                   className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-md"
                 >
                   Sign Up
@@ -463,11 +478,11 @@ export default function Navbar() {
 
             {/* List Rental */}
             <Link
-              href="/list-rental"
+              href={user?.role === "owner" ? "/owner-dashboard" : "/list-rental"}
               className="block px-4 py-4 text-lg text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl font-semibold transition-all duration-200 border-b border-gray-100"
               onClick={() => setIsMenuOpen(false)}
             >
-              List Rental
+              {user?.role === "owner" ? "Owner Dashboard" : "List Rental"}
             </Link>
 
             {/* User Authentication - Mobile */}
@@ -523,12 +538,20 @@ export default function Navbar() {
               <div className="p-4 space-y-3 border-t border-gray-200 mt-3">
 
                 <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    setAuthModal({ isOpen: true, mode: "login" });
+                  }}
                   className="w-full bg-white border-2 border-orange-600 text-orange-600 font-semibold px-4 py-3 rounded-lg hover:bg-orange-50 transition-all duration-200"
                 >
                   Login
                 </button>
 
                 <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    setAuthModal({ isOpen: true, mode: "signup" });
+                  }}
                   className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-3 rounded-lg transition-all duration-200"
                 >
                   Sign Up
@@ -540,6 +563,11 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+      <AuthModal
+        isOpen={authModal.isOpen}
+        mode={authModal.mode}
+        onClose={() => setAuthModal((modal) => ({ ...modal, isOpen: false }))}
+      />
     </nav>
   );
 }
