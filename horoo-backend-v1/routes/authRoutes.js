@@ -6,8 +6,6 @@ const { auth } = require("../middlewares/auth");
 
 const {  register, login , getMe, logout, forgotPassword, verifyResetOtp, resetPassword} = require("../controllers/authController");
 
- 
-
 router.post("/register", register);
 router.post("/login", login);
 router.get("/me", auth, getMe);
