@@ -52,7 +52,7 @@ export default function Hero() {
   ];
 
   return (
-    <section className="bg-gradient-to-br from-orange-50 via-white to-orange-100 py-6 md:py-10">
+    <section className="bg-orange-400 py-6 md:py-10">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 
         {/* Hero Content */}
