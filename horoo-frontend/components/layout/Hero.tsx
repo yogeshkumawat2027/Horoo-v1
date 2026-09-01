@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 import { FaHotel } from "react-icons/fa";
 
-export default function Hero() {
+export default function Hero(){
   const quickNavigation = [
     {
       name: "Rooms",
@@ -52,10 +52,9 @@ export default function Hero() {
   ];
 
   return (
-    <section className="bg-orange-400 py-6 md:py-10">
+    <section className="bg-orange-50 py-6 md:py-10">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 
-        {/* Hero Content */}
         <div className="mb-8 hidden text-center md:mb-12 md:block lg:block">
           <h1 className="mb-4 text-3xl font-bold leading-tight text-gray-800 md:mb-6 md:text-5xl lg:text-6xl">
             Find Your Perfect{" "}
@@ -65,26 +64,7 @@ export default function Hero() {
               <div className="absolute -bottom-2 left-0 right-0 h-1 scale-x-0 transform rounded-full bg-orange-300 animate-pulse" />
             </span>
           </h1>
-
-          {/* Search Bar */}
-          {/*
-          <div className="mx-auto mb-8 max-w-2xl md:mb-12">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search for rooms, hostels, flats..."
-                className="w-full rounded-full border-2 border-gray-200 px-6 py-4 text-lg shadow-lg transition-all duration-200 focus:border-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-100"
-              />
-
-              <button className="absolute right-2 top-1/2 -translate-y-1/2 transform rounded-full bg-orange-600 p-3 text-white transition-all duration-200 hover:scale-105 hover:bg-orange-700">
-                <FaSearch className="text-lg" />
-              </button>
-            </div>
-          </div>
-          */}
         </div>
-
-        {/* Quick Navigation */}
         <div className="mx-auto max-w-4xl">
           <h2 className="mb-6 hidden text-center text-xl font-semibold text-gray-800 md:mb-8 md:block md:text-2xl lg:block">
             Explore by Category
@@ -116,47 +96,6 @@ export default function Hero() {
             })}
           </div>
         </div>
-
-        {/* Stats Section */}
-        {/*
-        <div className="mx-auto mt-12 grid max-w-4xl grid-cols-2 gap-4 md:mt-16 md:grid-cols-4 md:gap-8">
-          <div className="rounded-xl bg-white/60 p-4 text-center backdrop-blur-sm">
-            <div className="mb-1 text-2xl font-bold text-orange-600 md:text-3xl">
-              1000+
-            </div>
-            <div className="text-sm font-medium text-gray-600 md:text-base">
-              Properties
-            </div>
-          </div>
-
-          <div className="rounded-xl bg-white/60 p-4 text-center backdrop-blur-sm">
-            <div className="mb-1 text-2xl font-bold text-orange-600 md:text-3xl">
-              50+
-            </div>
-            <div className="text-sm font-medium text-gray-600 md:text-base">
-              Cities
-            </div>
-          </div>
-
-          <div className="rounded-xl bg-white/60 p-4 text-center backdrop-blur-sm">
-            <div className="mb-1 text-2xl font-bold text-orange-600 md:text-3xl">
-              500+
-            </div>
-            <div className="text-sm font-medium text-gray-600 md:text-base">
-              Happy Users
-            </div>
-          </div>
-
-          <div className="rounded-xl bg-white/60 p-4 text-center backdrop-blur-sm">
-            <div className="mb-1 text-2xl font-bold text-orange-600 md:text-3xl">
-              24/7
-            </div>
-            <div className="text-sm font-medium text-gray-600 md:text-base">
-              Support
-            </div>
-          </div>
-        </div>
-        */}
       </div>
     </section>
   );
