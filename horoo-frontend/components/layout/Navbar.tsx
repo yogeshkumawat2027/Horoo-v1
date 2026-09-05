@@ -33,14 +33,13 @@ interface PropertyType {
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [isPropertiesDropdownOpen, setIsPropertiesDropdownOpen] =
-    useState<boolean>(false);
-  const [isMobilePropertiesOpen, setIsMobilePropertiesOpen] =
-    useState<boolean>(false);
-
+  const [isPropertiesDropdownOpen, setIsPropertiesDropdownOpen] =  useState<boolean>(false);
+   
+  const [isMobilePropertiesOpen, setIsMobilePropertiesOpen] =  useState<boolean>(false);
+   
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [isUserDropdownOpen, setIsUserDropdownOpen] =
-    useState<boolean>(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState<boolean>(false);
+    
   const [authModal, setAuthModal] = useState<{
     isOpen: boolean;
     mode: "login" | "signup";
@@ -105,12 +104,12 @@ export default function Navbar() {
     {
       name: "Rooms",
       icon: FaBed,
-      href: "/room",
+      href: "/rooms",
     },
     {
       name: "Flats",
       icon: FaBuilding,
-      href: "/flat",
+      href: "/flats",
     },
     {
       name: "Hostels",

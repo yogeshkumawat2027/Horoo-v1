@@ -13,6 +13,8 @@ export type ListingFilters = {
   maxPrice?: string;
 };
 
+export type ListingQueryParams = Record<string, string | undefined>;
+
 export type ApiListing = {
   _id: string;
   name?: string;
@@ -83,7 +85,7 @@ export function getListingTypeLabel(type: ListingType) {
 
 export async function getListings(
   type: ListingType,
-  filters: ListingFilters
+  filters: ListingQueryParams
 ): Promise<ListingsResponse> {
   const params = new URLSearchParams({ type });
 
