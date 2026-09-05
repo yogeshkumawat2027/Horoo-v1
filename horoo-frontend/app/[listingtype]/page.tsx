@@ -26,22 +26,16 @@ export default async function ListingTypePage({
     <main className="bg-gray-50">
       <section className="border-b border-orange-100 bg-white">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <p className="text-sm font-bold uppercase tracking-wide text-orange-600">
-            Horoo Rentals
-          </p>
+         
           <div className="mt-2 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-950 md:text-4xl">
                 {label} for rent
               </h1>
-              <p className="mt-2 max-w-2xl text-sm text-gray-600 md:text-base">
-                Browse verified rental listings with location, budget and
-                sharing filters.
-              </p>
             </div>
-            <div className="text-sm font-semibold text-gray-600">
+            {/* <div className="text-sm font-semibold text-gray-600">
               {data.pagination.totalListings} listings found
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
