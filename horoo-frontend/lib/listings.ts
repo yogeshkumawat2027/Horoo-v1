@@ -43,6 +43,10 @@ export type ApiListing = {
     name?: string;
     mobile?: string;
   };
+  location?: {
+    type?: "Point";
+    coordinates?: number[];
+  };
 };
 
 export type ListingsResponse = {

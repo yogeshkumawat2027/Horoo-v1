@@ -1,4 +1,3 @@
-const { redis } = require("../config/redis");
 const Listing = require("../models/Listing");
 
 
@@ -13,7 +12,7 @@ exports.createListing = async (req, res) => {
       ...req.body,
       owner: req.user.id,
     });
-    return res.json(201).json({ success: true, message: "listing created", listing })
+    return res.status(201).json({ success: true, message: "listing created", listing })
   } catch (err) {
     console.log(err);
     return res.status(500).json({ success: false, message: "server error" });
@@ -105,25 +104,8 @@ exports.updateAvailability = async (req, res) => {
 
 exports.getListings = async (req, res) => {
   try {
-
-    const cacheKey = `owner-listings:${req.user.id}`;
-    const cachedListings = await redis.get(cacheKey);
-
-    if(cachedListings){
-      return res.status(200).json({
-        success: true,
-        count: cachedListings.length,
-        listings: cachedListings,
-        cached: true,
-      });
-    }
-
-    console.log(req.user.id);
     const listings = await Listing.find({owner: req.user.id}).sort({ createdAt: -1 });
 
-      // Cache for 5 minutes
-    await redis.set(cacheKey, JSON.stringify(listings),{ EX: 300} );
-      
     return res.status(200).json({
       success: true,
       count: listings.length,

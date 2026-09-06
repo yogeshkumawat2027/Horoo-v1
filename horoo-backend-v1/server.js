@@ -45,8 +45,14 @@ app.get("/", (req, res) => {
 
 const startServer = async () => {
   try {
-    connectDB();
-    // await connectRedis();
+    await connectDB();
+
+    try {
+      await connectRedis();
+    } catch (error) {
+      console.error("Redis unavailable; continuing without cache:", error.message);
+    }
+
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
