@@ -68,7 +68,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
   const locationLine1 = line1Parts.join(", ");
   const locationLine2 = line2Parts.join(", ");
   const urlSlug = slug || _id;
-  const linkUrl = `/${type}/${urlSlug}`;
+  const linkUrl = `/${urlSlug}`;
   const formattedType = type.charAt(0).toUpperCase() + type.slice(1);
   const displayPrice = ownerPrice || price || rent || horooPrice;
   const hasDiscount = Boolean(ownerPrice && horooPrice && horooPrice > ownerPrice);

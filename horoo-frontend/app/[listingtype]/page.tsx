@@ -4,10 +4,12 @@ import ListingFilters from "@/components/listings/ListingFilters";
 import Pagination from "@/components/listings/Pagination";
 import {
   getListingTypeLabel,
+  getListingById,
   getListings,
   normalizeListingType,
   type ListingFilters as ListingFiltersType,
 } from "@/lib/listings";
+import ListingDetails from "@/components/listings/ListingDetails";
 
 export default async function ListingTypePage({
   params,
@@ -17,7 +19,13 @@ export default async function ListingTypePage({
   const filters = (await searchParams) as ListingFiltersType;
   const listingType = normalizeListingType(listingtype);
 
-  if (!listingType) notFound();
+  if (!listingType) {
+    const result = await getListingById(listingtype);
+
+    if (!result.success || !result.listing) notFound();
+
+    return <ListingDetails listing={result.listing} />;
+  }
 
   const data = await getListings(listingType, filters);
   const label = getListingTypeLabel(listingType);

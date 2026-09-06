@@ -35,6 +35,14 @@ export type ApiListing = {
   pincode?: string;
   isAvailable?: boolean;
   isVerified?: boolean;
+  size?: string;
+  description?: string;
+  address?: string;
+  facilities?: string[];
+  owner?: {
+    name?: string;
+    mobile?: string;
+  };
 };
 
 export type ListingsResponse = {
@@ -117,6 +125,28 @@ export async function getListings(
       },
       message:
         error instanceof Error ? error.message : "Unable to load listings",
+    };
+  }
+}
+
+export async function getListingById(
+  listingId: string
+): Promise<{ success: boolean; listing?: ApiListing; message?: string }> {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/api/listing/user/${encodeURIComponent(listingId)}`,
+      { cache: "no-store" }
+    );
+
+    if (!response.ok) {
+      throw new Error("Listing not found");
+    }
+
+    return response.json();
+  } catch (error) {
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Listing not found",
     };
   }
 }
