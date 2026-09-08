@@ -48,8 +48,19 @@ export function updateOwnerListing(id: string, input: ListingInput) {
   return ownerRequest<{ success: boolean; listing: ApiListing }>(`/api/listing/owner/edit/${encodeURIComponent(id)}`, { method: "PUT", body: JSON.stringify(input) });
 }
 
-export async function uploadListingImage(file: File) {
-  const signature = await ownerRequest<{ cloudName: string; apiKey: string; timestamp: number; folder: string; signature: string }>("/api/upload/signature");
+type UploadSignature = {
+  cloudName: string;
+  apiKey: string;
+  timestamp: number;
+  folder: string;
+  signature: string;
+};
+
+async function getListingUploadSignature() {
+  return ownerRequest<UploadSignature>("/api/upload/signature");
+}
+
+async function uploadToCloudinary(file: File, signature: UploadSignature) {
   const body = new FormData();
   body.append("file", file);
   body.append("api_key", signature.apiKey);
@@ -60,4 +71,14 @@ export async function uploadListingImage(file: File) {
   const data = await response.json();
   if (!response.ok || !data.secure_url) throw new Error(data.error?.message || "Image upload failed");
   return data.secure_url as string;
+}
+
+export async function uploadListingImages(files: File[]) {
+  const signature = await getListingUploadSignature();
+  return Promise.all(files.map((file) => uploadToCloudinary(file, signature)));
+}
+
+export async function uploadListingImage(file: File) {
+  const [uploaded] = await uploadListingImages([file]);
+  return uploaded;
 }

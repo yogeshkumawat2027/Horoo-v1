@@ -5,6 +5,7 @@ export type AuthUser = {
   _id?: string;
   name: string;
   email: string;
+  mobile?: string;
   role: UserRole;
   profilePicture?: string;
 };
@@ -25,6 +26,7 @@ export async function loginUser(email: string, password: string) {
 export async function registerUser(input: {
   name: string;
   email: string;
+  mobile: string;
   password: string;
   role: UserRole;
 }) {
