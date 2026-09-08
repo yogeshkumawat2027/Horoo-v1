@@ -31,16 +31,13 @@ export default function ListingDetails({ listing }: ListingDetailsProps) {
 
   return (
     <main className="bg-gray-50">
-      <div className="mx-auto max-w-6xl px-3 py-4 sm:px-5 lg:px-6">
-        <Link
-          href={`/${listing.type}s`}
-          className="mb-3 inline-flex items-center gap-1 text-sm font-semibold text-gray-600 hover:text-orange-600"
-        >
+      <div className="mx-auto max-w-6xl px-3 py-3 sm:px-5 lg:px-6">
+        <Link href={`/${listing.type}s`} className="mb-2 inline-flex items-center gap-1 text-sm font-semibold text-gray-600 hover:text-orange-600">
           <ArrowLeft className="h-4 w-4" />
           Back to listings
         </Link>
 
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(280px,0.8fr)]">
+        <div className="grid gap-3 lg:grid-cols-[minmax(0,1.5fr)_minmax(280px,0.8fr)]">
           <ListingGallery images={listing.images || []} title={title} />
 
           <section className="border border-gray-200 bg-white p-4 sm:p-5">
@@ -77,7 +74,7 @@ export default function ListingDetails({ listing }: ListingDetailsProps) {
           </section>
         </div>
 
-        <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(280px,0.8fr)]">
+        <div className="mt-3 grid gap-3 lg:grid-cols-[minmax(0,1.5fr)_minmax(280px,0.8fr)]">
           <div className="space-y-4">
             {listing.description && (
               <section className="border border-gray-200 bg-white p-4 sm:p-5">
@@ -114,7 +111,7 @@ export default function ListingDetails({ listing }: ListingDetailsProps) {
             {listing.owner?.mobile && (
               <a href={`tel:${listing.owner.mobile}`} className="mt-3 flex items-center gap-2 text-sm font-semibold text-orange-600 hover:text-orange-700">
                 <Phone className="h-4 w-4" />
-                {listing.owner.mobile}
+                <span>Call {listing.owner.mobile}</span>
               </a>
             )}
           </aside>

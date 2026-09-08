@@ -38,13 +38,14 @@ export default function AuthForm({
     const formData = new FormData(event.currentTarget);
     const name = String(formData.get("name") || "").trim();
     const email = String(formData.get("email") || "").trim();
+    const mobile = String(formData.get("mobile") || "").trim();
     const password = String(formData.get("password") || "");
 
     try {
       const response =
         mode === "login"
           ? await loginUser(email, password)
-          : await registerUser({ name, email, password, role });
+          : await registerUser({ name, email, mobile, password, role });
 
       if (response.user) {
         onSuccess?.(response.user);
@@ -94,6 +95,21 @@ export default function AuthForm({
               <input
                 name="name"
                 required
+                className="w-full border border-gray-200 px-3 py-2.5 outline-none focus:border-orange-500"
+              />
+            </label>
+
+            <label className="block space-y-1 text-sm font-semibold text-gray-700">
+              Mobile Number
+              <input
+                name="mobile"
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]{10}"
+                minLength={10}
+                maxLength={10}
+                required
+                placeholder="10-digit mobile number"
                 className="w-full border border-gray-200 px-3 py-2.5 outline-none focus:border-orange-500"
               />
             </label>
