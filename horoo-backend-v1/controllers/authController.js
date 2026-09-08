@@ -7,11 +7,19 @@ const transporter = require("../config/mailer");
 exports.register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
+    const mobile = String(req.body.mobile || "").trim();
 
-    if (!email || !password) {
+    if (!email || !password || !mobile) {
       return res.status(400).json({
         success: false,
-        message: "Email and password are required",
+        message: "Name, email, password, and mobile number are required",
+      });
+    }
+
+    if (!/^\d{10}$/.test(mobile)) {
+      return res.status(400).json({
+        success: false,
+        message: "Mobile number must be exactly 10 digits",
       });
     }
 
@@ -29,6 +37,7 @@ exports.register = async (req, res) => {
     const user = await User.create({
       name,
       email,
+      mobile,
       password: hashedPassword,
       role: role === "owner" ? "owner" : "user",
       authProvider: "local",
@@ -57,6 +66,7 @@ exports.register = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        mobile: user.mobile,
         role: user.role,
       },
     });
