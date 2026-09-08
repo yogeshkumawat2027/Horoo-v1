@@ -1,6 +1,5 @@
 
 import Hero from "@/components/layout/Hero";
-import Footer from "@/components/layout/Footer";
 import ListingCard from "@/components/ListingCard";
 import { getListings } from "@/lib/listings";
 
@@ -10,8 +9,6 @@ export default async function Home() {
   return (
     <>
       <Hero />
-     
-      <Footer />
     </>
   );
 }
