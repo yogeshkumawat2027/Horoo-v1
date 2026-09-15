@@ -10,7 +10,13 @@ import ListingGallery from "@/components/listings/ListingGallery";
 export default function OwnerListingPage({ params }: { params: Promise<{ id: string }> }) {
   const [listing, setListing] = useState<ApiListing | null>(null);
   const [error, setError] = useState("");
-  useEffect(() => { params.then(({ id }) => getOwnerListing(id).then((result) => setListing(result.listing)).catch((requestError) => setError(requestError instanceof Error ? requestError.message : "Listing not found"))); }, [params]);
+
+  useEffect(() => { params.then(({ id }) => 
+    getOwnerListing(id).then((result) =>
+       setListing(result.listing)).catch((requestError) => 
+             setError(requestError instanceof Error ? requestError.message : "Listing not found")));
+  }, [params]);
+
   if (error) return <main className="mx-auto max-w-6xl px-4 py-6 text-sm text-red-700">{error}</main>;
   if (!listing) return <main className="mx-auto max-w-6xl px-4 py-6 text-sm text-gray-600">Loading listing...</main>;
   const title = listing.name || listing.title || "Untitled listing";
