@@ -53,6 +53,10 @@ export default function OwnerDashboardPage() {
 
 function OwnerListingCard({ listing }: { listing: ApiListing }) {
   const image = listing.images?.[0];
+  const location = [listing.city, listing.state, listing.address]
+    .map((value) => (typeof value === "string" ? value : value?.name))
+    .find(Boolean) || "Location not added";
+
   return (
     <article className="group relative overflow-hidden rounded-lg border border-stone-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-lg">
       <Link href={`/owner-dashboard/${listing._id}`} className="block">
@@ -65,7 +69,7 @@ function OwnerListingCard({ listing }: { listing: ApiListing }) {
             <h2 className="line-clamp-1 text-lg font-bold text-stone-900 transition-colors group-hover:text-orange-600">{listing.name || listing.title || "Untitled listing"}</h2>
             <span className="shrink-0 text-base font-bold text-orange-600">Rs. {listing.price ?? listing.rent ?? "-"}</span>
           </div>
-          <p className="mt-2 flex items-center gap-1 text-sm text-stone-600"><MapPin className="h-3.5 w-3.5 shrink-0 text-orange-500" />{listing.city || listing.state || listing.address || "Location not added"}</p>
+          <p className="mt-2 flex items-center gap-1 text-sm text-stone-600"><MapPin className="h-3.5 w-3.5 shrink-0 text-orange-500" />{location}</p>
           <div className="mt-4 flex items-center justify-between border-t border-stone-100 pt-3 text-xs font-semibold uppercase tracking-wide text-stone-400"><span>{listing.type || "Rental"}</span><span className="text-orange-600">View details <ArrowUpRight className="ml-1 inline h-3.5 w-3.5" /></span></div>
         </div>
       </Link>
